@@ -2,6 +2,14 @@
 
 DEFCONFIG=tici_defconfig
 
+# determine number of processors
+OS="$(uname -s)"
+if [ "$OS" = "Darwin" ]; then
+    NPROCS="$(getconf _NPROCESSORS_ONLN)"
+else
+    NPROCS="$(nproc --all)"
+fi
+
 # Get directories and make sure we're in the correct spot to start the build
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)"
 TOOLS=$DIR/tools
@@ -30,11 +38,11 @@ export KCFLAGS="-w"
 # Load defconfig and build kernel
 echo "-- First make --"
 make $DEFCONFIG O=out
-echo "-- Second make: $(nproc --all) cores --"
-make -j$(nproc --all) O=out  # Image.gz-dtb
+echo "-- Second make: $NPROCS cores --"
+make -j$NPROCS O=out  # Image.gz-dtb
 
 # Turn on if you want perf
-# LDFLAGS=-static make -j$(nproc --all) -C tools/perf
+# LDFLAGS=-static make -j$NPROCS -C tools/perf
 
 # Copy over Image.gz-dtb
 mkdir -p $TMP_DIR
