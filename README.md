@@ -55,12 +55,16 @@ TODO: get these upstreamed in LFS
 
 #### Download latest bare-metal gcc from linaro for m1 MAC
 
-Download tarball [here](https://developer.arm.com/-/media/Files/downloads/gnu/13.3.rel1/binrel/arm-gnu-toolchain-13.3.rel1-darwin-arm64-aarch64-none-elf.tar.xz), and extract contents into `/tools/aarch64-darwin-none-elf-gcc`. `build_kernel.sh` will look for it there.
+The tarball [here](https://developer.arm.com/-/media/Files/downloads/gnu/13.3.rel1/binrel/arm-gnu-toolchain-13.3.rel1-darwin-arm64-aarch64-none-elf.tar.xz), has been added to Git LFS and will be extracted with:
+
+```sh
+./tools/extract_tools.sh
+```
 
 Install and link openssl headers/libraries
 
 ```sh
-brew install openssl
+brew install openssl@1.1
 
 # symlink stuff
 sudo mkdir /usr/local/include

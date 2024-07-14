@@ -2,6 +2,8 @@
 
 echo "Extracting tools..."
 
+OS="$(uname -s)"
+
 git lfs &> /dev/null || {
   echo "ERROR: git lfs not installed"
   exit 1
@@ -18,6 +20,8 @@ GOOGLE_GCC_4_9=aarch64-linux-android-4.9
 EDK2_LLVM=llvm-arm-toolchain-ship
 SEC_IMAGE=SecImage
 
+DARWIN_GCC=aarch64-none-elf-gcc
+
 # grep for `-`, which stands for LFS pointer
 git lfs ls-files | awk '{print $2}' | grep "-" &>/dev/null && {
   echo "Pulling git lfs objects..."
@@ -32,18 +36,26 @@ GOOGLE_GCC_4_9_TARBALL=$GOOGLE_GCC_4_9.tar.gz
 EDK2_LLVM_TARBALL=$EDK2_LLVM.tar.gz
 SEC_IMAGE_TARBALL=$SEC_IMAGE.tar.gz
 
-if [ ! -d $LINARO_GCC ]; then
-  tar -xzf $LINARO_GCC_TARBALL &>/dev/null
-fi
+DARWIN_GCC_TARBALL=$DARWIN_GCC.tar.gz
 
-if [ ! -d $GOOGLE_GCC_4_9 ]; then
-  tar -xzf $GOOGLE_GCC_4_9_TARBALL &>/dev/null
-fi
-
-if [ ! -d $EDK2_LLVM ]; then
-  tar -xzf $EDK2_LLVM_TARBALL &>/dev/null
-fi
-
-if [ ! -d $SEC_IMAGE ]; then
-  tar -xzf $SEC_IMAGE_TARBALL &>/dev/null
+if [ "$OS" != "Darwin" ]; then
+  if [ ! -d $LINARO_GCC ]; then
+    tar -xzf $LINARO_GCC_TARBALL &>/dev/null
+  fi
+  
+  if [ ! -d $GOOGLE_GCC_4_9 ]; then
+    tar -xzf $GOOGLE_GCC_4_9_TARBALL &>/dev/null
+  fi
+  
+  if [ ! -d $EDK2_LLVM ]; then
+    tar -xzf $EDK2_LLVM_TARBALL &>/dev/null
+  fi
+  
+  if [ ! -d $SEC_IMAGE ]; then
+    tar -xzf $SEC_IMAGE_TARBALL &>/dev/null
+  fi
+else
+  if [ ! -d $DARWIN_GCC ]; then
+    tar -xzf $DARWIN_GCC_TARBALL &>/dev/null
+  fi
 fi
