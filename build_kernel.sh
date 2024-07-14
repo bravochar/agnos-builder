@@ -28,9 +28,15 @@ $DIR/tools/extract_tools.sh
 
 # Build parameters
 export ARCH=arm64
-export CROSS_COMPILE=$TOOLS/aarch64-linux-gnu-gcc/bin/aarch64-linux-gnu-
-export CC=$TOOLS/aarch64-linux-gnu-gcc/bin/aarch64-linux-gnu-gcc
-export LD=$TOOLS/aarch64-linux-gnu-gcc/bin/aarch64-linux-gnu-ld.bfd
+if [ "$OS" = "Darwin" ]; then
+	export CROSS_COMPILE=$TOOLS/aarch64-none-elf-gcc/bin/aarch64-none-elf-
+	export CC=$TOOLS/aarch64-none-elf-gcc/bin/aarch64-none-elf-gcc
+	export LD=$TOOLS/aarch64-none-elf-gcc/bin/aarch64-none-elf-ld.bfd
+else
+	export CROSS_COMPILE=$TOOLS/aarch64-linux-gnu-gcc/bin/aarch64-linux-gnu-
+	export CC=$TOOLS/aarch64-linux-gnu-gcc/bin/aarch64-linux-gnu-gcc
+	export LD=$TOOLS/aarch64-linux-gnu-gcc/bin/aarch64-linux-gnu-ld.bfd
+fi
 
 # these do anything?
 export KCFLAGS="-w"
@@ -38,6 +44,7 @@ export KCFLAGS="-w"
 # Load defconfig and build kernel
 echo "-- First make --"
 make $DEFCONFIG O=out
+
 echo "-- Second make: $NPROCS cores --"
 make -j$NPROCS O=out  # Image.gz-dtb
 
